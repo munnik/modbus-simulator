@@ -31,9 +31,27 @@ You are connected to database "postgres" as user "postgres" via socket in "/var/
 then you can quit with the \q:
 **postgres=# \q**
 Next steps could be:
-- to create a database,
-- to create one or several dedicated user.
-- to create some code on top of signal-k to get GPS data and storing them
-- to read this data using an app
+### Create a database
+ to be completed
+### Create one or several dedicated user
+ to be completed
+### Create some code on top of signal-k to get GPS data and storing them
+ to be completed
+### Read this data using an app
+ to be completed
+ 
 
-# use_case_2
+# Use case n°2
+## Description
+1. Area like: Aboard Analysis Support
+2. Originator: Luerssen
+3. Title : Lube oil temperature sensor failure
+4. Description: A lube oil temperature sensor failure occured onboard during a sail.
+                The related auxillary engine stopped. It has to be interrogated if 
+                the engine stopped and the temperature raised subsequently or vice versa.
+                Therefore the timestamps of both events have to be compared.
+## sensors and protocols
+- a physical GPS HOLUM215+ that will use NMEA0183 
+- RPM engine will use MODBUS with a software simulator to begin with
+- Temperature sensor will use MODBUS with a software simulator to begin with
+- The engine running status will MODBUS with a software simulator to begin with
