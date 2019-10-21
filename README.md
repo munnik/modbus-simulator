@@ -1,5 +1,7 @@
 # Test environment setup
-## Linux host machine
+## a PC machine
+For the test environnment a NIFE 200 is used, but any Intel PC should work fine
+## Linux OS
 ## Signal-K 
 ## PostgreSQL
 
