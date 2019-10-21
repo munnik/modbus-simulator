@@ -51,7 +51,14 @@ Next steps could be:
                 the engine stopped and the temperature raised subsequently or vice versa.
                 Therefore the timestamps of both events have to be compared.
 ## sensors and protocols
-- a physical GPS HOLUM215+ that will use NMEA0183 
+- a physical GPS HOLUX M215+ that will use NMEA0183 v2.2
+  - NMEA Format GGA, RMC, VTG
+  - NMEA Format optional    
+  - Baud Rate   4800 bit/Sek.
+  - Baud Rate   optional    
+  - Daten/Check/Stop -Bit    8/N/1
 - RPM engine will use MODBUS with a software simulator to begin with
 - Temperature sensor will use MODBUS with a software simulator to begin with
 - The engine running status will MODBUS with a software simulator to begin with
+
+
