@@ -41,6 +41,14 @@ class ModbusDynamicSlaveContext(IModbusSlaveContext):
         raise NotImplementedError("Values cannot be set on a ModbusDynamicSlaveContext")
 
     def setLambda(self, fx, address, lambda_functions):
+        """
+
+        :param fx:
+        :param address:
+        :param lambda_functions: a lamda function or a list of lambda functions, the lambda function should require one
+        parameter which is the current time
+        :return:
+        """
         if not self.zero_mode:
             address = address + 1
 

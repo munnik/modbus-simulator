@@ -19,10 +19,13 @@ PORT = 5020
 
 def run_server(host, port):
     store = ModbusDynamicSlaveContext()
-    store.setLambda(4, 0, lambda t: random.randint(0, 10000))
-    store.setLambda(4, 1, lambda t: random.randint(0, 10000))
-    store.setLambda(4, 2, lambda t: random.randint(0, 10000))
-    store.setLambda(4, 3, lambda t: random.randint(0, 10000))
+    lambda_functions = [
+        lambda t: random.randint(0, 10000),
+        lambda t: random.randint(0, 10000),
+        lambda t: random.randint(0, 10000),
+        lambda t: random.randint(0, 10000),
+    ]
+    store.setLambda(4, 0, lambda_functions)
     context = ModbusServerContext(slaves=store, single=True)
 
     identity = ModbusDeviceIdentification()
