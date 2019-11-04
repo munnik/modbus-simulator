@@ -8,6 +8,8 @@ from pymodbus.server.sync import StartTcpServer
 
 from modbus_dynamic_slave_context import ModbusDynamicSlaveContext
 
+from math import floor
+
 FORMAT = ('%(asctime)-15s %(threadName)-15s'
           ' %(levelname)-8s %(module)-15s:%(lineno)-8s %(message)s')
 logging.basicConfig(format=FORMAT)
@@ -19,13 +21,17 @@ PORT = 5020
 
 def run_server(host, port):
     store = ModbusDynamicSlaveContext()
-    lambda_functions = [
-        lambda t: random.randint(0, 10000),
-        lambda t: random.randint(0, 10000),
-        lambda t: random.randint(0, 10000),
-        lambda t: random.randint(0, 10000),
+    lambda_functions_rpm = [
+        lambda t: floor(1940 + (t.timestamp() % 120 + random.randint(-2,5)))*1000 >> 16,
+        lambda t: floor(1940 + (t.timestamp() % 120 + random.randint(-2,5)))*1000 & 0xFFFF
     ]
-    store.setLambda(4, 0, lambda_functions)
+    store.setLambda(4, 51300, lambda_functions_rpm)
+
+    lambda_functions_temp = [
+        lambda t: floor(140 + (t.timestamp() % 120 + random.randint(-2,5)))*1000 >> 16,
+        lambda t: floor(140 + (t.timestamp() % 120 + random.randint(-2,5)))*1000 & 0xFFFF
+    ]
+    store.setLambda(4, 51460, lambda_functions_temp)
     context = ModbusServerContext(slaves=store, single=True)
 
     identity = ModbusDeviceIdentification()
