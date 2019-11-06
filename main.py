@@ -51,22 +51,22 @@ def run_server(host, port):
 
     #around 80c
     lambda_functions_coolanttemp = [
-        lambda t: floor(80 + (t.timestamp() % 120 + random.randint(-2, 5)) / 12) * 1000 >> 16,
-        lambda t: floor(80 + (t.timestamp() % 120 + random.randint(-2, 5)) / 12) * 1000 & 0xFFFF
+        lambda t: floor(90 - (t.timestamp() % 120 + random.randint(-2, 5)) / 12) * 1000 >> 16,
+        lambda t: floor(90 - (t.timestamp() % 120 + random.randint(-2, 5)) / 12) * 1000 & 0xFFFF
     ]
     store.setLambda(4, 51414, lambda_functions_coolanttemp)
 
-    #
+    # around 1 bar
     lambda_functions_coolantpressure = [
-        lambda t: floor((t.timestamp() - 1572869165) / 36) >> 16,
-        lambda t: floor((t.timestamp() - 1572869165) / 36 ) & 0xFFFF
+        lambda t: floor(110 - (t.timestamp() % 120 + random.randint(-2, 5)/10))* 1000 >> 16,
+        lambda t: floor(110 - (t.timestamp() % 120 + random.randint(-2, 5)/10))*1000 & 0xFFFF
     ]
     store.setLambda(4, 51606, lambda_functions_coolantpressure)
 
-    #
+    # around 2 bar
     lambda_functions_boostpressure = [
-        lambda t: floor((t.timestamp() - 1572869165) / 36) >> 16,
-        lambda t: floor((t.timestamp() - 1572869165) / 36 ) & 0xFFFF
+        lambda t: floor(190 + (t.timestamp() % 120 + random.randint(-2, 5)/10))* 1000 >> 16,
+        lambda t: floor(190 + (t.timestamp() % 120 + random.randint(-2, 5)/10))*1000 & 0xFFFF
     ]
     store.setLambda(4, 51408, lambda_functions_boostpressure)
 
@@ -119,10 +119,10 @@ def run_server(host, port):
     ]
     store.setLambda(4, 51436, lambda_functions_fuelrate)
     
-    #
+    # around 2.8 bar
     lambda_functions_fuelpressure = [
-        lambda t: floor((t.timestamp() - 1572869165) / 36) >> 16,
-        lambda t: floor((t.timestamp() - 1572869165) / 36 ) & 0xFFFF
+         lambda t: floor(290 - (t.timestamp() % 120 + random.randint(-2, 5)/10))* 1000 >> 16,
+        lambda t: floor(290 - (t.timestamp() % 120 + random.randint(-2, 5)/10))*1000 & 0xFFFF
     ]
     store.setLambda(4, 51432, lambda_functions_fuelpressure)
 
