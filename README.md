@@ -5,6 +5,11 @@ For the test environment a Nexcom NIFE 200 is used, but any Intel PC should work
 ### Debian Buster
 A plain installation of is sufficient, installation steps of additional packages with are required will be described below.
 ## Signal-K
+First create a user for Signal-K
+```bash
+sudo useradd -m -s /bin/bash signalk
+sudo passwd signalk
+```
 ### NodeJS
 Install NodeJS and install the required npm packages
 ```bash
@@ -12,63 +17,50 @@ sudo apt-get install nodejs npm
 sudo npm install -g npm@latest
 sudo npm install -g --unsafe-perm signalk-server
 ```
-Then setup the Signal-K server
+### Server
+Then setup the Signal-K server after switching to the signalk user
 ```bash
+su signalk 
 signalk-server-setup
 ```
-## PostgreSQL
-
-### Find the exact Linux distribution used by the host
-- use the command `lsb_release -a`
-This Linux is a Debian buster (you can get it by using  command).
-
-- take the corresponding steps for this Linux release on the PostgreSQL web site https://www.postgresql.org/download/linux/debian/ (if your distro is a debian, else adapt the link)
-
-- add the line of the postgresql repo on your machine:
+After setting up the server copy the files in the `systemd` folder to `/etc/systemd/system/` and start the signalk server
 ```bash
-sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ buster-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
-```
-you can also edit the file using vi for example.
-
-- then update the repo lists:
-```bash
-sudo apt-get update
-```
-
-- install the package, here for buster only version 11 is available:
-```bash
-apt-get install postgresql-11
+sudo cp systemd/* /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable signalk.service
+sudo systemctl enable signalk.socket
+sudo systemctl stop signalk.service
+sudo systemctl restart signalk.socket
+sudo systemctl restart signalk.service
 ```
 
-- then check if it is working
+The server is now reachable on port 3000. You now need to setup an admin account on the server by opening the server in a browser and clicking login. On this page you can create an admin account for the server.
+
+### InfluxDB
+Install InfluxDB to store signalk data locally
 ```bash
-sudo su - postgres
-psql
+wget -qO- https://repos.influxdata.com/influxdb.key | sudo apt-key add -
+source /etc/os-release
+echo "deb https://repos.influxdata.com/debian $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/influxdb.list
+sudo apt-get update && sudo apt-get install influxdb
+sudo systemctl unmask influxdb.service
+sudo systemctl start influxdb
 ```
-the posgresql prompt should comes:
-```
-psql (11.5 (Debian 11.5-3.pgdg100+1))
-Type "help" for help.
-```
-- you can get connection info with the \conninfo
-```
-postgres=# \conninfo
-You are connected to database "postgres" as user "postgres" via socket in "/var/run/postgresql" at port "5432".
-```
-then you can quit with the \q:
-```
-postgres=# \q
-```
-Next steps could be:
-### Create a database
- to be completed
-### Create one or several dedicated user
- to be completed
-### Create some code on top of signal-k to get GPS data and storing them
- to be completed
-### Read this data using an app
- to be completed
- 
+
+Then install the [signalk-to-influxdb](https://github.com/tkurki/signalk-to-influxdb) plugin by going to the signalk appstore and selecting it from the list. When the plugin is done installing, restart the server. The plugin can now be configured on the `server > plugin config` page. On that page you need to configure the following settings:
+
+- Database
+    + set this to the name of the database the data should be stored in, can be anything
+- Resolution
+    + set this to 0ms to store all data
+- Record Others
+    + Check this box
+- Type of List 
+    + set this to black to record all data 
+
+### MODBUS simulator and plugin
+
+### cloud connection
 
 # Use case n°2
 ## Description
