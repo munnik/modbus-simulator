@@ -65,6 +65,11 @@ To get some data into the server you can setup the modbus simulator in this repo
 
 ### cloud connection
 
+To get data to a central cloud server you can install [signalk-cloud-transport](https://github.com/codekilo/signalk-cloud-transport). To set this up, copy the example transmitter configuration file from the repository to `/home/signalk/.signalk-cloud/config/transmitter` and change the mqttbroker to the adress of the central server, change the mqtttopic to `signalk`.
+
+Finally copy `signalk-cloud-tx.service` to `/etc/systemd/system/signalk-cloud-tx.service` and setup the systemd service.
+
+
 # Use case n°2
 ## Description
 1. Area like: Aboard Analysis Support
