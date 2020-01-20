@@ -53,12 +53,15 @@ Then install the [signalk-to-influxdb](https://github.com/tkurki/signalk-to-infl
     + set this to the name of the database the data should be stored in, can be anything
 - Resolution
     + set this to 0ms to store all data
+- Record Track
+    + Check this box
 - Record Others
     + Check this box
 - Type of List 
     + set this to black to record all data 
 
 ### MODBUS simulator and plugin
+To get some data into the server you can setup the modbus simulator in this repository by following the instructions in `c32simulator.service`, and then installing and configuring the modbus plugin with the instructions [here](https://github.com/codekilo/signalk-modbus-plugin). The example configuration file in that repository is already setup for the c32simulator.
 
 ### cloud connection
 
