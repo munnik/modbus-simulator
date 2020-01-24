@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <!-- Required meta tags -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity=
+    "sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href=
+    "https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css"
+    integrity="sha384-8wYGNo4TwC9xzqNRdt7OUN789eBPzNQlO/sxIKaJR1gkX0+Ok1kXxhHR4pZU+gP2" crossorigin="anonymous">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+    integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <title>Code Kilo Data Inspector</title>
+</head>
+<body>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity=
+    "sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity=
+    "sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script> 
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity=
+    "sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js" integrity=
+    "sha384-sIzeKWIAHvT0Vm8QbfLCqZwBG0WMCkWVAOYd/330YSNeeQ1Y57N3T9lQz5Ry/EHH" crossorigin="anonymous"></script> 
+    <script src=
+    "https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"
+    integrity="sha384-hzexvprs0k2Q/IHSJOfegsjdg6kTcTTVxQdgHiB4+I/915hcvse9v42LLVVM5K4e" crossorigin=
+    "anonymous"></script>
+        <script type="text/javascript">
+    $(function () {
+        // setup datepickers to be linked
+        $('#fromDatePicker').datetimepicker({ format: 'Y-MM-DD\\THH:mm:ss\\Z'});
+        $('#toDatePicker').datetimepicker({
+            useCurrent: false,
+            format: 'Y-MM-DD\\THH:mm:ss\\Z'
+        });
+        $("#fromDatePicker").on("change.datetimepicker", function (e) {
+            $('#toDatePicker').datetimepicker('minDate', e.date);
+        });
+        $("#toDatePicker").on("change.datetimepicker", function (e) {
+            $('#fromDatePicker').datetimepicker('maxDate', e.date);
+        });
+        // submit form with js instead of a direct http call
+        $('#dataForm').on('submit', function () {
+            var vessel = $("#vesselInput").value;
+            var path = $("#pathInput").value;
+            console.log(vessel,path);
+            return false;
+        });
+    });
+
+    </script>
+    <script type="text/javascript">
+
+</script>
+    </script>
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col-9">
+                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                  <li class="nav-item">
+                    <a class="nav-link active" id="pills-table-tab" data-toggle="pill" href="#pills-table" role="tab" aria-controls="pills-table" aria-selected="true">Table</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="pills-graph-tab" data-toggle="pill" href="#pills-graph" role="tab" aria-controls="pills-graph" aria-selected="false">Graph</a>
+                  </li>
+
+                </ul>
+                <div class="tab-content" id="pills-tabContent">
+                  <div class="tab-pane fade show active" id="pills-table" role="tabpanel" aria-labelledby="pills-table-tab">
+                    <table class="table table-bordered" id="dataTable">
+                    <tr>
+                        <th>Time</th>
+                        <th>Path</th>
+                    </tr>
+                </table>
+                  </div>
+                  <div class="tab-pane fade" id="pills-graph" role="tabpanel" aria-labelledby="pills-graph-tab">...</div>
+                </div>
+            </div>
+            <div class="col-3">
+                <form id="dataForm">
+                    <div class="form-group">
+                        <label for="vesselInput">Vessel</label>
+                        <select class="form-control" id="vesselInput"  aria-describedby="vesselHelp">
+                        </select>
+                        <small id="vesselHelp" class="form-text text-muted">Pick the vessel</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="pathInput">Path</label>
+                        <select class="form-control" id="pathInput"  aria-describedby="pathHelp" disabled>
+                        </select>
+                        <small id="pathHelp" class="form-text text-muted">Pick the path</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="fromDatePicker">From</label>
+                        <div class="input-group date" id="fromDatePicker" data-target-input="nearest">
+                            <input type="text" class="form-control datetimepicker-input" data-target=
+                            "#fromDatePicker">
+                            <div class="input-group-append" data-target="#fromDatePicker" data-toggle=
+                            "datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="toDatePicker">To</label>
+                        <div class="input-group date" id="toDatePicker" data-target-input="nearest">
+                            <input type="text" class="form-control datetimepicker-input" data-target=
+                            "#toDatePicker">
+                            <div class="input-group-append" data-target="#toDatePicker" data-toggle=
+                            "datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                     <button type="submit" class="btn btn-primary">Retrieve data</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="fixed-bottom">
+        <div class="container">
+            <div class="row align-items-end  h-25 my-3">
+                <div class="col">
+                    <table class="table table-bordered" id="dataAvailable">
+                        <tr>
+                            <th>No.</th>
+                            <th>Path</th>
+                            <th>From</th>
+                            <th>To</th>
+                            <th>available</th>
+                            <th>show</th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>    
+</body>
+</html>
