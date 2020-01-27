@@ -14,8 +14,8 @@
     <title>Code Kilo Data Inspector</title>
 </head>
 <body>
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity=
-    "sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script> 
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+    crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity=
     "sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script> 
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity=
@@ -26,7 +26,7 @@
     "https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"
     integrity="sha384-hzexvprs0k2Q/IHSJOfegsjdg6kTcTTVxQdgHiB4+I/915hcvse9v42LLVVM5K4e" crossorigin=
     "anonymous"></script>
-        <script type="text/javascript">
+    <script type="text/javascript">
     $(function () {
         // setup datepickers to be linked
         $('#fromDatePicker').datetimepicker({ format: 'Y-MM-DD\\THH:mm:ss\\Z'});
@@ -42,10 +42,46 @@
         });
         // submit form with js instead of a direct http call
         $('#dataForm').on('submit', function () {
-            var vessel = $("#vesselInput").value;
-            var path = $("#pathInput").value;
+            var vessel = $("#vesselInput :selected").val();
+            var path = $("#pathInput :selected").val();
+            var rowCount = $('#dataAvailable tr').length;
             console.log(vessel,path);
+            $('#dataAvailable tr:last').after(`<tr><td>${rowCount}</td><td>vessels.${vessel}.${path}</td><td>from</td><td>to</td><td>yes</td><td>no</td></tr>`);
             return false;
+        });
+
+        $('#vesselInput').on('change', function () {
+            var selected = $("#vesselInput :selected").val();
+            $.ajax({
+          url: `/signalk/v1/api/list/paths/${selected}`,
+          dataType: "json",
+          success: function(response) {
+            try{
+              response.paths.forEach(path => $("#pathInput").append(new Option(path,path)));
+              $("#pathInput").removeAttr('disabled');
+            }catch(e){
+                console.info("Error:"+e);
+            }
+          },
+          error: function(xhr) {
+            console.info("Ajax failed Error");
+          }
+        });
+        });
+
+        $.ajax({
+          url: "/signalk/v1/api/list/vessels",
+          dataType: "json",
+          success: function(response) {
+            try{
+              response.contexts.forEach(urn => $("#vesselInput").append(new Option(urn,urn)))
+            }catch(e){
+                console.info("Error:"+e);
+            }
+          },
+          error: function(xhr) {
+            console.info("Ajax failed Error");
+          }
         });
     });
 
@@ -118,24 +154,21 @@
                 </form>
             </div>
         </div>
-    </div>
-    <div class="fixed-bottom">
-        <div class="container">
-            <div class="row align-items-end  h-25 my-3">
-                <div class="col">
-                    <table class="table table-bordered" id="dataAvailable">
-                        <tr>
-                            <th>No.</th>
-                            <th>Path</th>
-                            <th>From</th>
-                            <th>To</th>
-                            <th>available</th>
-                            <th>show</th>
-                        </tr>
-                    </table>
-                </div>
-            </div>
+        <div class="row align-items-end  h-25 my-3">
+        <div class="col">
+            <table class="table table-bordered" id="dataAvailable">
+                <tr>
+                    <th>No.</th>
+                    <th>Path</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>available</th>
+                    <th>show</th>
+                </tr>
+            </table>
         </div>
-    </div>    
+    </div>
+</div>
+ 
 </body>
 </html>

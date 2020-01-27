@@ -1,0 +1,22 @@
+{
+  "name": "code-kilo-data-inspector",
+  "version": "1.0.0",
+  "description": "a simple tool to view stored signalk data",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codekilo/use_case_2.git"
+  },
+  "keywords": [
+    "signalk-webapp"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/codekilo/use_case_2/issues"
+  },
+  "homepage": "https://github.com/codekilo/use_case_2#readme"
+}
