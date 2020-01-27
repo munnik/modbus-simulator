@@ -153,6 +153,8 @@ function showData(path) {
 }
 
 function removeData(path) {
+  //TODO handle two rows with the same ID
+  //TODO handle removal before ajax request finishes
   console.log("removing: ", path);
   var selector = $.escapeSelector(`${path}`);
   var row = $(`#${selector}`);
