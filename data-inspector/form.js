@@ -44,7 +44,7 @@ $(function() {
         var icon = $(
           `#${selector} > td:nth-child(4) > i`
         );
-        icon.removeClass("fa-times");
+        icon.removeClass("fa-hourglass-half");
         icon.addClass("fa-check");
         receivedData.push(response);
       }
@@ -116,7 +116,7 @@ function createDataAvailableRow(pathValue, fromValue, toValue) {
   var available = document.createElement('td');
   var logo = document.createElement('i');
   logo.classList.add('fa');
-  logo.classList.add('fa-times');
+  logo.classList.add('fa-hourglass-half');
   available.appendChild(logo);
   result.appendChild(available);
 
@@ -149,8 +149,16 @@ function createDataAvailableRow(pathValue, fromValue, toValue) {
 
 function showData(path) {
   console.log("showing: ", path);
+  //TODO actually show data
 }
 
 function removeData(path) {
   console.log("removing: ", path);
+  var selector = $.escapeSelector(`${path}`);
+  var row = $(`#${selector}`);
+  var index = $('#dataAvailable tr').index(row) - 1;
+  row.remove();
+  console.log(index);
+  receivedData.splice(index, 1);
+  console.log(receivedData);
 }
