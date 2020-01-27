@@ -3,7 +3,7 @@
 For the test environment a Nexcom NIFE 200 is used, but any Intel PC should work fine.
 ## Linux OS
 ### Debian Buster
-A plain installation of is sufficient, installation steps of additional packages with are required will be described below.
+A plain installation of it is sufficient, installation steps of additional packages with are required will be described below.
 ## Signal-K
 First create a user for Signal-K
 ```bash
