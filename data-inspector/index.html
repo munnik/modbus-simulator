@@ -26,70 +26,7 @@
     "https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"
     integrity="sha384-hzexvprs0k2Q/IHSJOfegsjdg6kTcTTVxQdgHiB4+I/915hcvse9v42LLVVM5K4e" crossorigin=
     "anonymous"></script>
-    <script type="text/javascript">
-    $(function () {
-        // setup datepickers to be linked
-        $('#fromDatePicker').datetimepicker({ format: 'Y-MM-DD\\THH:mm:ss\\Z'});
-        $('#toDatePicker').datetimepicker({
-            useCurrent: false,
-            format: 'Y-MM-DD\\THH:mm:ss\\Z'
-        });
-        $("#fromDatePicker").on("change.datetimepicker", function (e) {
-            $('#toDatePicker').datetimepicker('minDate', e.date);
-        });
-        $("#toDatePicker").on("change.datetimepicker", function (e) {
-            $('#fromDatePicker').datetimepicker('maxDate', e.date);
-        });
-        // submit form with js instead of a direct http call
-        $('#dataForm').on('submit', function () {
-            var vessel = $("#vesselInput :selected").val();
-            var path = $("#pathInput :selected").val();
-            var rowCount = $('#dataAvailable tr').length;
-            console.log(vessel,path);
-            $('#dataAvailable tr:last').after(`<tr><td>${rowCount}</td><td>vessels.${vessel}.${path}</td><td>from</td><td>to</td><td>yes</td><td>no</td></tr>`);
-            return false;
-        });
-
-        $('#vesselInput').on('change', function () {
-            var selected = $("#vesselInput :selected").val();
-            $.ajax({
-          url: `/signalk/v1/api/list/paths/${selected}`,
-          dataType: "json",
-          success: function(response) {
-            try{
-              response.paths.forEach(path => $("#pathInput").append(new Option(path,path)));
-              $("#pathInput").removeAttr('disabled');
-            }catch(e){
-                console.info("Error:"+e);
-            }
-          },
-          error: function(xhr) {
-            console.info("Ajax failed Error");
-          }
-        });
-        });
-
-        $.ajax({
-          url: "/signalk/v1/api/list/vessels",
-          dataType: "json",
-          success: function(response) {
-            try{
-              response.contexts.forEach(urn => $("#vesselInput").append(new Option(urn,urn)))
-            }catch(e){
-                console.info("Error:"+e);
-            }
-          },
-          error: function(xhr) {
-            console.info("Ajax failed Error");
-          }
-        });
-    });
-
-    </script>
-    <script type="text/javascript">
-
-</script>
-    </script>
+    <script src="form.js"></script>
     <div class="container">
         <div class="row mt-5">
             <div class="col-9">
@@ -118,7 +55,7 @@
                 <form id="dataForm">
                     <div class="form-group">
                         <label for="vesselInput">Vessel</label>
-                        <select class="form-control" id="vesselInput"  aria-describedby="vesselHelp">
+                        <select class="form-control" id="vesselInput"  aria-describedby="vesselHelp" disabled>
                         </select>
                         <small id="vesselHelp" class="form-text text-muted">Pick the vessel</small>
                     </div>
