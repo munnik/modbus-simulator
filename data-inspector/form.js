@@ -1,28 +1,58 @@
+var receivedData = [];
 $(function() {
-  // setup datepickers to be linked
+  // setup datepickers to be linked and disabled on load
   $('#fromDatePicker').datetimepicker({
-    format: 'Y-MM-DD\\THH:mm:ss\\Z'
+    format: 'Y-MM-DD\\THH:mm:ss\\Z',
+    timeZone: 'Etc/UTC'
   });
+  $('#fromDatePicker').datetimepicker('disable');
   $('#toDatePicker').datetimepicker({
     useCurrent: false,
+    timeZone: 'Etc/UTC',
     format: 'Y-MM-DD\\THH:mm:ss\\Z'
   });
+  $('#toDatePicker').datetimepicker('disable');
   $("#fromDatePicker").on("change.datetimepicker", function(e) {
     $('#toDatePicker').datetimepicker('minDate', e.date);
+    $('#toDatePicker').datetimepicker('enable');
   });
   $("#toDatePicker").on("change.datetimepicker", function(e) {
     $('#fromDatePicker').datetimepicker('maxDate', e.date);
   });
+
+
   // submit form with js instead of a direct http call
   $('#dataForm').on('submit', function() {
     var vessel = $("#vesselInput :selected").val();
     var path = $("#pathInput :selected").val();
-    var rowCount = $('#dataAvailable tr').length;
-    console.log(vessel, path);
-    $('#dataAvailable tr:last').after(`<tr><td>${rowCount}</td><td>vessels.${vessel}.${path}</td><td>from</td><td>to</td><td>yes</td><td>no</td></tr>`);
+    var fullpath = `${vessel}.${path}`;
+    var from = $("#fromDatePicker").datetimepicker('viewDate')._d;
+    var to = $("#toDatePicker").datetimepicker('viewDate')._d;
+    $('#dataAvailable tr:last').after(createDataAvailableRow(fullpath, from.toISOString(), to.toISOString()));
+
+    fullpath = fullpath.split('.').join('/');
+    console.log(fullpath);
+    $.ajax({
+      url: `/signalk/v1/api/history/${fullpath}`,
+      data: {
+        start: from.toISOString(),
+        end: to.toISOString()
+      },
+      dataType: "json",
+      success: function(response) {
+        var selector = $.escapeSelector(`${vessel}.${path}`);
+        var icon = $(
+          `#${selector} > td:nth-child(4) > i`
+        );
+        icon.removeClass("fa-times");
+        icon.addClass("fa-check");
+        receivedData.push(response);
+      }
+    });
     return false;
   });
 
+  //get list of paths once vessel has been selected
   $('#vesselInput').on('change', function() {
     var selected = $("#vesselInput :selected").val();
     $("#pathInput").attr('disabled');
@@ -44,6 +74,12 @@ $(function() {
     });
   });
 
+  // enable first date picker after path has been selected
+  $('#pathInput').on('change', function() {
+    $('#fromDatePicker').datetimepicker('enable');
+  });
+
+  // get list of vessels and enable the path input
   $.ajax({
     url: "/signalk/v1/api/list/vessels",
     dataType: "json",
@@ -60,3 +96,61 @@ $(function() {
     }
   });
 });
+
+function createDataAvailableRow(pathValue, fromValue, toValue) {
+  var result = document.createElement('tr');
+  result.id = pathValue;
+
+  var path = document.createElement('td');
+  path.appendChild(document.createTextNode(pathValue));
+  result.appendChild(path);
+
+  var from = document.createElement('td');
+  from.appendChild(document.createTextNode(fromValue));
+  result.appendChild(from);
+
+  var to = document.createElement('td');
+  to.appendChild(document.createTextNode(toValue));
+  result.appendChild(to);
+
+  var available = document.createElement('td');
+  var logo = document.createElement('i');
+  logo.classList.add('fa');
+  logo.classList.add('fa-times');
+  available.appendChild(logo);
+  result.appendChild(available);
+
+  var show = document.createElement('td');
+  var showBtn = document.createElement("button");
+  showBtn.type = "button";
+  showBtn.classList.add('btn');
+  showBtn.classList.add('btn-primary');
+  showBtn.appendChild(document.createTextNode("Show"));
+  showBtn.onclick = function() {
+    showData(pathValue);
+  };
+  show.appendChild(showBtn);
+  result.appendChild(show);
+
+  var remove = document.createElement('td');
+  var removeBtn = document.createElement("button");
+  removeBtn.type = "button";
+  removeBtn.classList.add('btn');
+  removeBtn.classList.add('btn-primary');
+  removeBtn.appendChild(document.createTextNode("Remove"));
+  removeBtn.onclick = function() {
+    removeData(pathValue);
+  };
+  remove.appendChild(removeBtn);
+  result.appendChild(remove);
+  return result;
+
+}
+
+function showData(path) {
+  console.log("showing: ", path);
+}
+
+function removeData(path) {
+  console.log("removing: ", path);
+}
