@@ -44,8 +44,12 @@ $(function() {
         var icon = $(
           `#${selector} > td:nth-child(4) > i`
         );
+        var button = $(
+          `#${selector} > td:nth-child(6) > button`
+        );
         icon.removeClass("fa-hourglass-half");
         icon.addClass("fa-check");
+        button.removeAttr("disabled");
         receivedData.push(response);
       }
     });
@@ -125,6 +129,7 @@ function createDataAvailableRow(pathValue, fromValue, toValue) {
   showBtn.type = "button";
   showBtn.classList.add('btn');
   showBtn.classList.add('btn-primary');
+  showBtn.classList.add('btn-sm');
   showBtn.appendChild(document.createTextNode("Show"));
   showBtn.onclick = function() {
     showData(pathValue);
@@ -137,6 +142,8 @@ function createDataAvailableRow(pathValue, fromValue, toValue) {
   removeBtn.type = "button";
   removeBtn.classList.add('btn');
   removeBtn.classList.add('btn-primary');
+  removeBtn.classList.add('btn-sm');
+  removeBtn.setAttribute("disabled", "");
   removeBtn.appendChild(document.createTextNode("Remove"));
   removeBtn.onclick = function() {
     removeData(pathValue);
@@ -153,7 +160,6 @@ function showData(path) {
 }
 
 function removeData(path) {
-  //TODO handle removal before ajax request finishes
   console.log("removing: ", path);
   var selector = $.escapeSelector(`${path}`);
   var row = $(`#${selector}`).first();
