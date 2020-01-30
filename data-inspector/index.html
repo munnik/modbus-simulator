@@ -70,23 +70,25 @@
                         <label for="fromDatePicker">From</label>
                         <div class="input-group date" id="fromDatePicker" data-target-input="nearest">
                             <input type="text" class="form-control datetimepicker-input" data-target=
-                            "#fromDatePicker">
+                            "#fromDatePicker" aria-describedby="fromHelp">
                             <div class="input-group-append" data-target="#fromDatePicker" data-toggle=
                             "datetimepicker">
                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                             </div>
                         </div>
+                         <small id="fromHelp" class="form-text text-muted">Start time (in UTC)</small>
                     </div>
                     <div class="form-group">
                         <label for="toDatePicker">To</label>
                         <div class="input-group date" id="toDatePicker" data-target-input="nearest">
                             <input type="text" class="form-control datetimepicker-input" data-target=
-                            "#toDatePicker">
+                            "#toDatePicker" aria-describedby="toHelp">
                             <div class="input-group-append" data-target="#toDatePicker" data-toggle=
                             "datetimepicker">
                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                             </div>
                         </div>
+                        <small id="toHelp" class="form-text text-muted">End time (in UTC)</small>
                     </div>
                      <button type="submit" class="btn btn-primary">Retrieve data</button>
                 </form>
