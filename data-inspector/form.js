@@ -31,7 +31,6 @@ $(function() {
     $('#dataAvailable tr:last').after(createDataAvailableRow(fullpath, from.toISOString(), to.toISOString()));
 
     fullpath = fullpath.split('.').join('/');
-    console.log(fullpath);
     $.ajax({
       url: `/signalk/v1/api/history/${fullpath}`,
       data: {
@@ -165,7 +164,5 @@ function removeData(path) {
   var row = $(`#${selector}`).first();
   var index = $('#dataAvailable tr').index(row) - 1;
   row.remove();
-  console.log(index);
   receivedData.splice(index, 1);
-  console.log(receivedData);
 }
