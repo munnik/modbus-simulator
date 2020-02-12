@@ -1,5 +1,6 @@
 var receivedData = [];
 $(function() {
+  var urlPrefix = 'http://157.97.171.165:3000';
   // setup datepickers to be linked and disabled on load
   $('#fromDatePicker').datetimepicker({
     format: 'Y-MM-DD\\THH:mm:ss\\Z',
@@ -23,7 +24,7 @@ $(function() {
 
   // submit form with js instead of a direct http call
   $('#dataForm').on('submit', function() {
-    var vessel = $("#vesselInput :selected").val();
+    var vessel = $("#vesselInput").val();
     var path = $("#pathInput :selected").val();
     var fullpath = `${vessel}.${path}`;
     var from = $("#fromDatePicker").datetimepicker('viewDate')._d;
@@ -33,7 +34,7 @@ $(function() {
     fullpath = fullpath.split('.').join('/');
     console.log(fullpath);
     $.ajax({
-      url: `/signalk/v1/api/history/${fullpath}`,
+      url: `${urlPrefix}/signalk/v1/api/history/${fullpath}`,
       data: {
         start: from.toISOString(),
         end: to.toISOString()
@@ -58,11 +59,11 @@ $(function() {
 
   //get list of paths once vessel has been selected
   $('#vesselInput').on('change', function() {
-    var selected = $("#vesselInput :selected").val();
+    var selected = $("#vesselInput").val();
     $("#pathInput").attr('disabled');
     $("#pathInput").empty();
     $.ajax({
-      url: `/signalk/v1/api/list/paths/${selected}`,
+      url: `${urlPrefix}/signalk/v1/api/list/paths/${selected}`,
       dataType: "json",
       success: function(response) {
         try {
@@ -85,12 +86,14 @@ $(function() {
 
   // get list of vessels and enable the path input
   $.ajax({
-    url: "/signalk/v1/api/list/vessels",
+    url: `${urlPrefix}/signalk/v1/api/list/vessels`,
     dataType: "json",
     success: function(response) {
       try {
-        response.contexts.forEach(urn => $("#vesselInput").append(new Option(urn, urn)));
+        vessels = []
+        response.contexts.forEach(urn => vessels.push({value: urn, label: urn}));
         $("#vesselInput").removeAttr('disabled');
+        $("#vesselInput").autocompleter({source: vessels});
       } catch (e) {
         console.info("Error:" + e);
       }
@@ -156,7 +159,57 @@ function createDataAvailableRow(pathValue, fromValue, toValue) {
 
 function showData(path) {
   console.log("showing: ", path);
-  //TODO actually show data
+  // display the graph
+  google.charts.load('current', {'packages':['line', 'table']});
+  google.charts.setOnLoadCallback(showTableAndGraph);
+  function showTableAndGraph() {
+    // create all the columns
+    var columns = ['ts'];
+    for (var i = 0; i < receivedData.length; i++) {
+      for (var j = 0 ; j < receivedData[i]['objects'].length; j++) {
+        for (var k = 0 ; k < receivedData[i]['objects'][j]['properties'].length; k++) {
+          columns.push(receivedData[i]['objects'][j]['properties'][k]['path']);
+        }
+      }
+    }
+
+    timeSeries = {};
+    for (var i = 0; i < receivedData.length; i++) {
+      for (var j = 0; j < receivedData[i]['objects'][0]['timestamps'].length; j++) {
+        var ts = new Date(receivedData[i]['objects'][0]['timestamps'][j]);
+        var value = receivedData[i]['objects'][0]['properties'][0]['values'][j];
+
+        // check if timestamp already exist, otherwise make an empty list of values
+        if (!(ts in timeSeries)) {
+          timeSeries[ts] = [];
+          for (var k = 0; k < receivedData.length; k++) {
+            timeSeries[ts].push(undefined);
+          }
+        }
+        timeSeries[ts][i] = value;
+      }
+    }
+    dataSet = [];
+    for (ts in timeSeries) {
+      dataSet.push([ts].concat(timeSeries[ts]));
+    }
+    var data = google.visualization.arrayToDataTable([columns].concat(dataSet));
+
+    var options = {
+      chart: {title: 'Vessel data'},
+      curveType: 'function',
+      legend: { position: 'bottom' }
+    };
+
+    var table = new google.visualization.Table(document.getElementById('gtable'));
+    table.draw(data, {showRowNumber: false, width: '100%', height: '100%'});
+
+    var chart = new google.charts.Line(document.getElementById('ggraph'));
+    chart.draw(data, google.charts.Line.convertOptions(options));
+  }
+
+
+  // todo display the table
 }
 
 function removeData(path) {

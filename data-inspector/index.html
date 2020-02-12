@@ -10,6 +10,12 @@
     integrity="sha384-8wYGNo4TwC9xzqNRdt7OUN789eBPzNQlO/sxIKaJR1gkX0+Ok1kXxhHR4pZU+gP2" crossorigin="anonymous">
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
     integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/jquery-autocompleter@0.3.0/src/jquery.autocompleter.css" rel="stylesheet">
+    <style>
+        .autocompleter-focus {
+          background-color: white;
+        }
+    </style>
     <title>Code Kilo Data Inspector</title>
 </head>
 <body>
@@ -27,7 +33,9 @@
     "anonymous"></script> 
     <script src=
     "https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.27/moment-timezone-with-data-1970-2030.min.js"
-    integrity="sha256-HOrjj9tkgprV+NEcUKfWb6S9T1aYMYlZz9TtLNP6ZhU=" crossorigin="anonymous"></script> 
+    integrity="sha256-HOrjj9tkgprV+NEcUKfWb6S9T1aYMYlZz9TtLNP6ZhU=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-autocompleter@0.3.0/dist/jquery.autocompleter.min.js"></script>
     <script src="form.js"></script>
     <div class="container">
         <div class="row mt-5">
@@ -45,24 +53,19 @@
                 <div class="tab-content" id="pills-tabContent">
                     <div class="tab-pane fade show active" id="pills-table" role="tabpanel" aria-labelledby=
                     "pills-table-tab">
-                        <table class="table table-bordered" id="dataTable">
-                            <tr>
-                                <th>Time</th>
-                                <th>Path</th>
-                            </tr>
-                        </table>
+                        <div id="gtable"></div>
                     </div>
                     <div class="tab-pane fade" id="pills-graph" role="tabpanel" aria-labelledby="pills-graph-tab">
-                        ...
+                        <div id="ggraph"></div>
                     </div>
                 </div>
             </div>
             <div class="col-3">
                 <form id="dataForm" name="dataForm">
                     <div class="form-group">
-                        <label for="vesselInput">Vessel</label> <select class="form-control" id="vesselInput"
+                        <label for="vesselInput">Vessel</label> <input class="form-control" id="vesselInput"
                         aria-describedby="vesselHelp" disabled>
-                        </select> <small id="vesselHelp" class="form-text text-muted">Pick the vessel</small>
+                        </input> <small id="vesselHelp" class="form-text text-muted">Pick the vessel</small>
                     </div>
                     <div class="form-group">
                         <label for="pathInput">Path</label> <select class="form-control" id="pathInput"
