@@ -15,6 +15,14 @@
         .autocompleter-focus {
           background-color: white;
         }
+        .autocompleter{
+            z-index: 100;
+            box-shadow: 1px 1px #888888;
+            width: min-content;
+            padding: .375rem;
+            border: 1px solid #ced4da;
+            border-radius: .25rem;  
+        }
     </style>
     <title>Code Kilo Data Inspector</title>
 </head>
@@ -33,9 +41,9 @@
     "anonymous"></script> 
     <script src=
     "https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.27/moment-timezone-with-data-1970-2030.min.js"
-    integrity="sha256-HOrjj9tkgprV+NEcUKfWb6S9T1aYMYlZz9TtLNP6ZhU=" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery-autocompleter@0.3.0/dist/jquery.autocompleter.min.js"></script>
+    integrity="sha256-HOrjj9tkgprV+NEcUKfWb6S9T1aYMYlZz9TtLNP6ZhU=" crossorigin="anonymous"></script> 
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/jquery-autocompleter@0.3.0/dist/jquery.autocompleter.min.js"></script> 
     <script src="form.js"></script>
     <div class="container">
         <div class="row mt-5">
@@ -64,8 +72,8 @@
                 <form id="dataForm" name="dataForm">
                     <div class="form-group">
                         <label for="vesselInput">Vessel</label> <input class="form-control" id="vesselInput"
-                        aria-describedby="vesselHelp" disabled>
-                        </input> <small id="vesselHelp" class="form-text text-muted">Pick the vessel</small>
+                        aria-describedby="vesselHelp" disabled> <small id="vesselHelp" class=
+                        "form-text text-muted">Pick the vessel</small>
                     </div>
                     <div class="form-group">
                         <label for="pathInput">Path</label> <select class="form-control" id="pathInput"

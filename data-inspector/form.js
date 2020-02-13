@@ -1,6 +1,5 @@
 var receivedData = [];
 $(function() {
-  var urlPrefix = 'http://157.97.171.165:3000';
   // setup datepickers to be linked and disabled on load
   $('#fromDatePicker').datetimepicker({
     format: 'Y-MM-DD\\THH:mm:ss\\Z',
@@ -33,7 +32,7 @@ $(function() {
 
     fullpath = fullpath.split('.').join('/');
     $.ajax({
-      url: `${urlPrefix}/signalk/v1/api/history/${fullpath}`,
+      url: `/signalk/v1/api/history/${fullpath}`,
       data: {
         start: from.toISOString(),
         end: to.toISOString()
@@ -62,7 +61,7 @@ $(function() {
     $("#pathInput").attr('disabled');
     $("#pathInput").empty();
     $.ajax({
-      url: `${urlPrefix}/signalk/v1/api/list/paths/${selected}`,
+      url: `/signalk/v1/api/list/paths/${selected}`,
       dataType: "json",
       success: function(response) {
         try {
@@ -85,14 +84,19 @@ $(function() {
 
   // get list of vessels and enable the path input
   $.ajax({
-    url: `${urlPrefix}/signalk/v1/api/list/vessels`,
+    url: `/signalk/v1/api/list/vessels`,
     dataType: "json",
     success: function(response) {
       try {
-        vessels = []
-        response.contexts.forEach(urn => vessels.push({value: urn, label: urn}));
+        vessels = [];
+        response.contexts.forEach(urn => vessels.push({
+          value: urn,
+          label: urn
+        }));
         $("#vesselInput").removeAttr('disabled');
-        $("#vesselInput").autocompleter({source: vessels});
+        $("#vesselInput").autocompleter({
+          source: vessels
+        });
       } catch (e) {
         console.info("Error:" + e);
       }
@@ -159,14 +163,17 @@ function createDataAvailableRow(pathValue, fromValue, toValue) {
 function showData(path) {
   console.log("showing: ", path);
   // display the graph
-  google.charts.load('current', {'packages':['line', 'table']});
+  google.charts.load('current', {
+    'packages': ['line', 'table']
+  });
   google.charts.setOnLoadCallback(showTableAndGraph);
+
   function showTableAndGraph() {
     // create all the columns
     var columns = ['ts'];
     for (var i = 0; i < receivedData.length; i++) {
-      for (var j = 0 ; j < receivedData[i]['objects'].length; j++) {
-        for (var k = 0 ; k < receivedData[i]['objects'][j]['properties'].length; k++) {
+      for (var j = 0; j < receivedData[i]['objects'].length; j++) {
+        for (var k = 0; k < receivedData[i]['objects'][j]['properties'].length; k++) {
           columns.push(receivedData[i]['objects'][j]['properties'][k]['path']);
         }
       }
@@ -195,13 +202,21 @@ function showData(path) {
     var data = google.visualization.arrayToDataTable([columns].concat(dataSet));
 
     var options = {
-      chart: {title: 'Vessel data'},
+      chart: {
+        title: 'Vessel data'
+      },
       curveType: 'function',
-      legend: { position: 'bottom' }
+      legend: {
+        position: 'bottom'
+      }
     };
 
     var table = new google.visualization.Table(document.getElementById('gtable'));
-    table.draw(data, {showRowNumber: false, width: '100%', height: '100%'});
+    table.draw(data, {
+      showRowNumber: false,
+      width: '100%',
+      height: '100%'
+    });
 
     var chart = new google.charts.Line(document.getElementById('ggraph'));
     chart.draw(data, google.charts.Line.convertOptions(options));
