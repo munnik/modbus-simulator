@@ -43,12 +43,19 @@ $(function() {
         var icon = $(
           `#${selector} > td:nth-child(4) > i`
         );
-        var button = $(
+        $(
           `#${selector} > td:nth-child(6) > button`
-        );
+        ).removeAttr("disabled");
         icon.removeClass("fa-hourglass-half");
-        icon.addClass("fa-check");
-        button.removeAttr("disabled");
+        if (response.objects.length == 0) {
+          icon.addClass("fa-exclamation-triangle");
+          var button = $(
+            `#${selector} > td:nth-child(5) > button`
+          );
+          button.attr("disabled", true);
+        } else {
+          icon.addClass("fa-check");
+        }
         receivedData.push(response);
       }
     });
@@ -58,7 +65,7 @@ $(function() {
   //get list of paths once vessel has been selected
   $('#vesselInput').on('change', function() {
     var selected = $("#vesselInput").val();
-    $("#pathInput").attr('disabled');
+    $("#pathInput").attr('disabled', true);
     $("#pathInput").empty();
     $.ajax({
       url: `/signalk/v1/api/list/paths/${selected}`,
