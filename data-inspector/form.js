@@ -177,20 +177,27 @@ function showData(path) {
 
   function showTableAndGraph() {
     // create all the columns
-    var columns = ['ts'];
+    var columns = [{
+      label: 'ts',
+      type: 'date'
+    }];
     for (var i = 0; i < receivedData.length; i++) {
-      for (var j = 0; j < receivedData[i]['objects'].length; j++) {
-        for (var k = 0; k < receivedData[i]['objects'][j]['properties'].length; k++) {
-          columns.push(receivedData[i]['objects'][j]['properties'][k]['path']);
+      for (var j = 0; j < receivedData[i].objects.length; j++) {
+        for (var k = 0; k < receivedData[i].objects[j].properties.length; k++) {
+          let field = receivedData[i].objects[j].properties[k].path;
+          columns.push({
+            label: field,
+            type: 'number'
+          });
         }
       }
     }
 
     timeSeries = {};
     for (var i = 0; i < receivedData.length; i++) {
-      for (var j = 0; j < receivedData[i]['objects'][0]['timestamps'].length; j++) {
-        var ts = new Date(receivedData[i]['objects'][0]['timestamps'][j]);
-        var value = receivedData[i]['objects'][0]['properties'][0]['values'][j];
+      for (var j = 0; j < receivedData[i].objects[0].timestamps.length; j++) {
+        var ts = receivedData[i].objects[0].timestamps[j];
+        var value = receivedData[i].objects[0].properties[0].values[j];
 
         // check if timestamp already exist, otherwise make an empty list of values
         if (!(ts in timeSeries)) {
@@ -204,9 +211,15 @@ function showData(path) {
     }
     dataSet = [];
     for (ts in timeSeries) {
-      dataSet.push([ts].concat(timeSeries[ts]));
+      dataSet.push([new Date(ts)].concat(timeSeries[ts]));
     }
     var data = google.visualization.arrayToDataTable([columns].concat(dataSet));
+    var formatter_short = new google.visualization.DateFormat({
+      pattern: 'yyyy-MM-ddTHH:mm:ss'
+    });
+    formatter_short.format(data, 0);
+
+
 
     var options = {
       chart: {
