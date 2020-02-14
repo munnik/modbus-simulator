@@ -171,7 +171,7 @@ function showData(path) {
   console.log("showing: ", path);
   // display the graph
   google.charts.load('current', {
-    'packages': ['line', 'table']
+    'packages': ['corechart', 'table']
   });
   google.charts.setOnLoadCallback(showTableAndGraph);
 
@@ -238,8 +238,8 @@ function showData(path) {
       height: '100%'
     });
 
-    var chart = new google.charts.Line(document.getElementById('ggraph'));
-    chart.draw(data, google.charts.Line.convertOptions(options));
+    var chart = new google.visualization.LineChart(document.getElementById('ggraph'));
+    chart.draw(data, options);
   }
 
 
