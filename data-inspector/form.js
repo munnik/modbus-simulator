@@ -42,16 +42,16 @@ $(function() {
         var selector = $.escapeSelector(`${vessel}.${path}`);
         var icon = $(
           `#${selector} > td:nth-child(4) > i`
-        );
+        ).first();
         $(
           `#${selector} > td:nth-child(6) > button`
-        ).removeAttr("disabled");
+        ).first().removeAttr("disabled");
         icon.removeClass("fa-hourglass-half");
         if (response.objects.length == 0) {
           icon.addClass("fa-exclamation-triangle");
           var button = $(
             `#${selector} > td:nth-child(5) > button`
-          );
+          ).first();
           button.attr("disabled", true);
         } else {
           icon.addClass("fa-check");
@@ -181,9 +181,9 @@ function showData(path) {
       label: 'ts',
       type: 'date'
     }];
-    for (var i = 0; i < receivedData.length; i++) {
-      for (var j = 0; j < receivedData[i].objects.length; j++) {
-        for (var k = 0; k < receivedData[i].objects[j].properties.length; k++) {
+    for (let i = 0; i < receivedData.length; i++) {
+      for (let j = 0; j < receivedData[i].objects.length; j++) {
+        for (let k = 0; k < receivedData[i].objects[j].properties.length; k++) {
           let field = receivedData[i].objects[j].properties[k].path;
           columns.push({
             label: field,
@@ -194,15 +194,15 @@ function showData(path) {
     }
 
     timeSeries = {};
-    for (var i = 0; i < receivedData.length; i++) {
-      for (var j = 0; j < receivedData[i].objects[0].timestamps.length; j++) {
+    for (let i = 0; i < receivedData.length; i++) {
+      for (let j = 0; j < receivedData[i].objects[0].timestamps.length; j++) {
         var ts = receivedData[i].objects[0].timestamps[j];
         var value = receivedData[i].objects[0].properties[0].values[j];
 
         // check if timestamp already exist, otherwise make an empty list of values
         if (!(ts in timeSeries)) {
           timeSeries[ts] = [];
-          for (var k = 0; k < receivedData.length; k++) {
+          for (let k = 0; k < receivedData.length; k++) {
             timeSeries[ts].push(undefined);
           }
         }
@@ -214,10 +214,10 @@ function showData(path) {
       dataSet.push([new Date(ts)].concat(timeSeries[ts]));
     }
     var data = google.visualization.arrayToDataTable([columns].concat(dataSet));
-    var formatter_short = new google.visualization.DateFormat({
+    let dateFormatter = new google.visualization.DateFormat({
       pattern: 'yyyy-MM-ddTHH:mm:ss'
     });
-    formatter_short.format(data, 0);
+    dateFormatter.format(data, 0);
 
 
 
