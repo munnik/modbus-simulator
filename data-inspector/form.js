@@ -235,7 +235,8 @@ function showData(path) {
     table.draw(data, {
       showRowNumber: false,
       width: '100%',
-      height: '100%'
+      height: '100%',
+      sortColumn: 0
     });
 
     var chart = new google.visualization.LineChart(document.getElementById('ggraph'));
