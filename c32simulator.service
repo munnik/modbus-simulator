@@ -1,25 +1,13 @@
 [Unit]
-Description=simulator for cat c32 engine
+Description=Simulator for CAT C32 engine
 After=syslog.target network.target
 
 [Service]
-User=modbus
-WorkingDirectory=/opt/use_case_2/
-ExecStart=/opt/use_case_2/venv/bin/python main.py
+User=munnik
+Group=munnik
+WorkingDirectory=/home/munnik/Code/modbus-simulator
+ExecStart=/home/munnik/Code/modbus-simulator/venv/bin/python main.py
 Restart=on-abort
-Environment="PATH=/opt/use_case_2/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
 [Install]
-WantedBy=signalk.service
-
-# Systemd unit file for the modbus simulator, to use change /opt/use_case_2 with the location of the python script and virtualenv
-# Create the user using
-# sudo useradd -r modbus
-
-# Then copy this file to /etc/systemd/system/
-# sudo cp c32simulator.service /etc/systemd/system/c32simulator.service
-# sudo chmod 644 /etc/systemd/system/c32simulator.service
-
-# Then start and enable the service
-# sudo systemctl start c32simulator
-# sudo systemctl enable c32simulator
+WantedBy=multi-user.target
